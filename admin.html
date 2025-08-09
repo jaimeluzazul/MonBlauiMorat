@@ -1,0 +1,222 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administració - El Món en Blau i Morat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Montserrat';
+      src: url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+    }
+    @font-face {
+      font-family: 'Poppins';
+      src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Login Section -->
+  <section class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+      <h2 class="text-2xl font-bold font-['Montserrat'] text-blue-600 text-center mb-4">Accés Administració</h2>
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label for="username" class="block text-gray-700 font-['Poppins']">Usuari</label>
+          <input type="text" id="username" class="w-full p-2 border rounded-lg font-['Poppins']" required>
+        </div>
+        <div>
+          <label for="password" class="block text-gray-700 font-['Poppins']">Contrasenya</label>
+          <input type="password" id="password" class="w-full p-2 border rounded-lg font-['Poppins']" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg font-['Poppins'] hover:bg-blue-700">Accedir</button>
+      </form>
+      <div id="loginMessage" class="mt-4 text-center text-red-600"></div>
+    </div>
+  </section>
+
+  <!-- Admin Dashboard (Hidden until login) -->
+  <section id="adminDashboard" class="hidden min-h-screen p-6">
+    <h2 class="text-3xl font-bold font-['Montserrat'] text-blue-600 mb-4">Gestió d'Horaris</h2>
+    <div class="mb-6">
+      <label for="newDate" class="block text-gray-700 font-['Poppins']">Data Nova</label>
+      <input type="date" id="newDate" class="w-full p-2 border rounded-lg font-['Poppins'] mb-2">
+      <input type="time" id="newTime" class="w-full p-2 border rounded-lg font-['Poppins'] mb-2">
+      <button onclick="addTimeSlot()" class="bg-green-600 text-white p-2 rounded-lg font-['Poppins'] hover:bg-green-700">Afegir Hora</button>
+    </div>
+    <div class="mb-6">
+      <h3 class="text-xl font-bold font-['Montserrat'] text-blue-600 mb-2">Definir Hores Setmanals</h3>
+      <label for="weeklyDay" class="block text-gray-700 font-['Poppins']">Dia de la Setmana</label>
+      <select id="weeklyDay" class="w-full p-2 border rounded-lg font-['Poppins'] mb-2">
+        <option value="monday">Dilluns</option>
+        <option value="tuesday">Dimarts</option>
+        <option value="wednesday">Dimecres</option>
+        <option value="thursday">Dijous</option>
+        <option value="friday">Divendres</option>
+        <option value="saturday">Dissabte</option>
+        <option value="sunday">Diumenge</option>
+      </select>
+      <label for="weeklyHours" class="block text-gray-700 font-['Poppins']">Hores (ex. 10:00-12:00, 14:00-16:00)</label>
+      <input type="text" id="weeklyHours" class="w-full p-2 border rounded-lg font-['Poppins'] mb-2">
+      <button onclick="saveWeeklyHours()" class="bg-purple-600 text-white p-2 rounded-lg font-['Poppins'] hover:bg-purple-700">Desar Hores Setmanals</button>
+    </div>
+    <div id="scheduleTable" class="overflow-x-auto">
+      <table class="w-full bg-white rounded-lg shadow-lg">
+        <thead>
+          <tr class="bg-blue-600 text-white">
+            <th class="p-2">Data</th>
+            <th class="p-2">Hora</th>
+            <th class="p-2">Acció</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleBody"></tbody>
+      </table>
+    </div>
+    <button onclick="logout()" class="mt-6 bg-red-600 text-white p-2 rounded-lg font-['Poppins'] hover:bg-red-700">Tancar Sessió</button>
+    <a href="manual-gestio-horaris.md" target="_blank" class="mt-6 bg-gray-600 text-white px-4 py-2 rounded-lg font-['Poppins'] hover:bg-gray-700">Llegir Manual</a>
+  </section>
+
+  <script>
+    // Sample admin credentials (replace with secure backend authentication in production)
+    const adminCredentials = { username: "admin", password: "admin123" };
+    let schedule = {
+      "2025-08-10": ["10:00", "11:00", "14:00", "15:00"],
+      "2025-08-11": ["09:00", "12:00", "16:00"]
+    };
+    let weeklySchedule = {};
+
+    // Login functionality
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if (username === adminCredentials.username && password === adminCredentials.password) {
+        document.getElementById('loginMessage').textContent = '';
+        document.querySelector('section:first-child').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.remove('hidden');
+        loadSchedule();
+      } else {
+        document.getElementById('loginMessage').textContent = 'Usuari o contrasenya incorrectes.';
+      }
+    });
+
+    // Load schedule
+    function loadSchedule() {
+      const scheduleBody = document.getElementById('scheduleBody');
+      scheduleBody.innerHTML = '';
+      for (let date in schedule) {
+        schedule[date].forEach(time => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="p-2 text-center">${date}</td>
+            <td class="p-2 text-center">${time}</td>
+            <td class="p-2 text-center"><button onclick="removeTimeSlot('${date}', '${time}')" class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700">Eliminar</button></td>
+          `;
+          scheduleBody.appendChild(row);
+        });
+      }
+    }
+
+    // Add new time slot
+    function addTimeSlot() {
+      const newDate = document.getElementById('newDate').value;
+      const newTime = document.getElementById('newTime').value;
+      if (newDate && newTime) {
+        if (!schedule[newDate]) schedule[newDate] = [];
+        if (!schedule[newDate].includes(newTime)) {
+          schedule[newDate].push(newTime);
+          schedule[newDate].sort();
+          loadSchedule();
+          document.getElementById('newDate').value = '';
+          document.getElementById('newTime').value = '';
+        }
+      }
+    }
+
+    // Remove time slot
+    function removeTimeSlot(date, time) {
+      schedule[date] = schedule[date].filter(t => t !== time);
+      if (schedule[date].length === 0) delete schedule[date];
+      loadSchedule();
+    }
+
+    // Save weekly hours
+    function saveWeeklyHours() {
+      const day = document.getElementById('weeklyDay').value;
+      const hours = document.getElementById('weeklyHours').value.split(',').map(h => h.trim());
+      weeklySchedule[day] = hours;
+      alert(`Hores setmanals per a ${day} guardades amb èxit: ${hours.join(', ')}`);
+      document.getElementById('weeklyHours').value = '';
+      // Here you would typically sync with the main schedule (e.g., generate dates)
+      generateWeeklySchedule();
+    }
+
+    // Generate weekly schedule (example logic)
+    function generateWeeklySchedule() {
+      const today = new Date();
+      for (let day in weeklySchedule) {
+        let dayIndex = { monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 0 }[day];
+        let currentDate = new Date(today);
+        currentDate.setDate(today.getDate() + (dayIndex - today.getDay() + 7) % 7);
+        let dateStr = currentDate.toISOString().split('T')[0];
+        if (!schedule[dateStr]) schedule[dateStr] = [];
+        weeklySchedule[day].forEach(time => {
+          if (!schedule[dateStr].includes(time)) {
+            schedule[dateStr].push(time);
+            schedule[dateStr].sort();
+          }
+        });
+      }
+      loadSchedule();
+    }
+
+    // Logout
+    function logout() {
+      document.getElementById('adminDashboard').classList.add('hidden');
+      document.querySelector('section:first-child').classList.remove('hidden');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+  </script>
+</body>
+</html>
