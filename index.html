@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Món en Blau i Morat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Montserrat';
+      src: url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+    }
+    @font-face {
+      font-family: 'Poppins';
+      src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white py-6">
+    <div class="container mx-auto px-4 flex items-center justify-between">
+      <div class="flex items-center">
+        <img src="logo-placeholder.png" alt="El Món en Blau i Morat Logo" class="h-16 mr-4">
+        <h1 class="text-3xl font-bold font-['Montserrat']">El Món en Blau i Morat</h1>
+      </div>
+      <nav>
+        <ul class="flex space-x-6">
+          <li><a href="#inicio" class="hover:underline">Inicio</a></li>
+          <li><a href="#nosotros" class="hover:underline">Nosotros</a></li>
+          <li><a href="#servicios" class="hover:underline">Servicios</a></li>
+          <li><a href="#citas" class="hover:underline">Citas Online</a></li>
+          <li><a href="#contacto" class="hover:underline">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold font-['Montserrat'] mb-4">Apoyo i Sanació a través de la Musicoteràpia</h2>
+      <p class="text-lg font-['Poppins'] mb-6">Un espai dedicat a les famílies que enfronten l’autisme i l’Alzheimer, oferint empatia, comunitat i esperança.</p>
+      <a href="#citas" class="bg-white text-blue-600 px-6 py-3 rounded-full font-['Poppins'] font-semibold hover:bg-blue-100">Sol·licita una Cita</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="nosotros" class="py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold font-['Montserrat'] text-center text-blue-600 mb-8">Sobre Nosaltres</h2>
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mb-6 md:mb-0">
+          <img src="community-placeholder.png" alt="Comunitat" class="rounded-lg shadow-lg">
+        </div>
+        <div class="md:w-1/2 md:pl-8">
+          <p class="text-lg font-['Poppins'] text-gray-700 mb-4">A <strong>El Món en Blau i Morat</strong>, creiem en el poder transformador de la música per connectar, sanar i unir les famílies que enfronten els reptes de l’autisme i l’Alzheimer.</p>
+          <p class="text-lg font-['Poppins'] text-gray-700">La nostra missió és oferir un espai de suport on l’empatia, la creativitat i la comunitat s’entrelacen per brindar esperança i benestar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="servicios" class="bg-gray-200 py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold font-['Montserrat'] text-center text-blue-600 mb-8">Els Nostres Serveis</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div class="text-4xl mb-4">🎶</div>
+          <h3 class="text-xl font-semibold font-['Montserrat'] mb-2">Musicoteràpia</h3>
+          <p class="font-['Poppins'] text-gray-600">Sessions personalitzades que utilitzen la música per millorar la comunicació, les emocions i el benestar.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div class="text-4xl mb-4">🤝</div>
+          <h3 class="text-xl font-semibold font-['Montserrat'] mb-2">Suport Familiar</h3>
+          <p class="font-['Poppins'] text-gray-600">Tallers i recursos per a famílies, fomentant la comprensió i el suport mutu.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div class="text-4xl mb-4">🌱</div>
+          <h3 class="text-xl font-semibold font-['Montserrat'] mb-2">Educació i Sensibilització</h3>
+          <p class="font-['Poppins'] text-gray-600">Programes educatius per informar sobre l’autisme i l’Alzheimer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Online Appointments Section -->
+  <section id="citas" class="py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold font-['Montserrat'] text-blue-600 mb-8">Sol·licita una Cita Online</h2>
+      <p class="text-lg font-['Poppins'] text-gray-700 mb-6">Escull una hora lliure i reserva la teva cita de musicoteràpia.</p>
+      <div class="max-w-md mx-auto">
+        <select class="w-full p-3 mb-4 border rounded-lg font-['Poppins']" id="appointment-date">
+          <option value="">Selecciona una data</option>
+          <option value="2025-08-10">10 d'agost de 2025</option>
+          <option value="2025-08-11">11 d'agost de 2025</option>
+        </select>
+        <div id="available-times" class="mb-4"></div>
+        <input type="text" placeholder="Nom" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']">
+        <input type="email" placeholder="Correu Electrònic" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']">
+        <button class="bg-blue-600 text-white px-6 py-3 rounded-full font-['Poppins'] font-semibold hover:bg-blue-700" onclick="bookAppointment()">Reservar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contacto" class="py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold font-['Montserrat'] text-blue-600 mb-8">Contacte</h2>
+      <p class="text-lg font-['Poppins'] text-gray-700 mb-6">Estem aquí per ajudar-te. ¡Posa't en contacte amb nosaltres!</p>
+      <div class="max-w-md mx-auto">
+        <input type="text" placeholder="Nom" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']">
+        <input type="email" placeholder="Correu Electrònic" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']">
+        <textarea placeholder="Missatge" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']" rows="4"></textarea>
+        <button class="bg-blue-600 text-white px-6 py-3 rounded-full font-['Poppins'] font-semibold hover:bg-blue-700">Enviar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p class="font-['Poppins']">&copy; 2025 El Món en Blau i Morat. Tots els drets reservats.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Sample data for available times (replace with dynamic data from a backend)
+    const availableTimes = {
+      "2025-08-10": ["10:00", "11:00", "14:00", "15:00"],
+      "2025-08-11": ["09:00", "12:00", "16:00"]
+    };
+
+    const appointmentDateSelect = document.getElementById('appointment-date');
+    const availableTimesDiv = document.getElementById('available-times');
+
+    appointmentDateSelect.addEventListener('change', function() {
+      const selectedDate = this.value;
+      availableTimesDiv.innerHTML = '';
+      if (availableTimes[selectedDate]) {
+        const timesList = availableTimes[selectedDate].map(time => `<button class="bg-purple-600 text-white px-4 py-2 rounded-full m-1 hover:bg-purple-700" onclick="selectTime('${time}')">${time}</button>`).join('');
+        availableTimesDiv.innerHTML = `<p class="mb-2">Hores lliures:</p>${timesList}`;
+      }
+    });
+
+    function selectTime(time) {
+      alert(`Has seleccionat l'hora: ${time}. Completa el formulari per confirmar!`);
+    }
+
+    function bookAppointment() {
+      alert('Cita reservada amb èxit! Rebràs un correu de confirmació.');
+    }
+  </script>
+</body>
+</html>
