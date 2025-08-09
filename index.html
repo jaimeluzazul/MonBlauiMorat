@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ca">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +14,23 @@
       font-family: 'Poppins';
       src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
     }
+    body {
+      background: linear-gradient(to bottom, #e6f0fa, #f5e6fa);
+    }
+    .language-switch {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
   </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans relative">
+  <!-- Language Switch -->
+  <div class="language-switch">
+    <button id="ca-btn" class="bg-blue-600 text-white px-3 py-1 rounded-l hover:bg-blue-700">Valencià</button>
+    <button id="es-btn" class="bg-blue-600 text-white px-3 py-1 rounded-r hover:bg-blue-700">Castellano</button>
+  </div>
+
   <!-- Header -->
   <header class="bg-blue-600 text-white py-6">
     <div class="container mx-auto px-4 flex items-center justify-between">
@@ -26,11 +40,11 @@
       </div>
       <nav>
         <ul class="flex space-x-6">
-          <li><a href="#inicio" class="hover:underline">Inicio</a></li>
-          <li><a href="#nosotros" class="hover:underline">Nosotros</a></li>
-          <li><a href="#servicios" class="hover:underline">Servicios</a></li>
-          <li><a href="#citas" class="hover:underline">Citas Online</a></li>
-          <li><a href="#contacto" class="hover:underline">Contacto</a></li>
+          <li><a href="#inicio" class="hover:underline">Inici</a></li>
+          <li><a href="#nosotros" class="hover:underline">Nosaltres</a></li>
+          <li><a href="#servicios" class="hover:underline">Serveis</a></li>
+          <li><a href="#citas" class="hover:underline">Cites Online</a></li>
+          <li><a href="#contacto" class="hover:underline">Contacte</a></li>
         </ul>
       </nav>
     </div>
@@ -39,9 +53,9 @@
   <!-- Hero Section -->
   <section id="inicio" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-20">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-4xl font-bold font-['Montserrat'] mb-4">Apoyo i Sanació a través de la Musicoteràpia</h2>
+      <h2 class="text-4xl font-bold font-['Montserrat'] mb-4">Ajudem i Sanació a través de la Musicoteràpia</h2>
       <p class="text-lg font-['Poppins'] mb-6">Un espai dedicat a les famílies que enfronten l’autisme i l’Alzheimer, oferint empatia, comunitat i esperança.</p>
-      <a href="#citas" class="bg-white text-blue-600 px-6 py-3 rounded-full font-['Poppins'] font-semibold hover:bg-blue-100">Sol·licita una Cita</a>
+      <a href="#citas" class="bg-white text-blue-600 px-6 py-3 rounded-full font-['Poppins'] font-semibold hover:bg-blue-100">Demana una Cita</a>
     </div>
   </section>
 
@@ -88,13 +102,13 @@
   <!-- Online Appointments Section -->
   <section id="citas" class="py-16">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold font-['Montserrat'] text-blue-600 mb-8">Sol·licita una Cita Online</h2>
-      <p class="text-lg font-['Poppins'] text-gray-700 mb-6">Escull una hora lliure i reserva la teva cita de musicoteràpia.</p>
+      <h2 class="text-3xl font-bold font-['Montserrat'] text-blue-600 mb-8">Demana una Cita Online</h2>
+      <p class="text-lg font-['Poppins'] text-gray-700 mb-6">Tria una hora lliure i reserva la teva cita de musicoteràpia.</p>
       <div class="max-w-md mx-auto">
         <select class="w-full p-3 mb-4 border rounded-lg font-['Poppins']" id="appointment-date">
-          <option value="">Selecciona una data</option>
-          <option value="2025-08-10">10 d'agost de 2025</option>
-          <option value="2025-08-11">11 d'agost de 2025</option>
+          <option value="">Tria una data</option>
+          <option value="2025-08-10">10 d’agost de 2025</option>
+          <option value="2025-08-11">11 d’agost de 2025</option>
         </select>
         <div id="available-times" class="mb-4"></div>
         <input type="text" placeholder="Nom" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']">
@@ -108,7 +122,7 @@
   <section id="contacto" class="py-16">
     <div class="container mx-auto px-4 text-center">
       <h2 class="text-3xl font-bold font-['Montserrat'] text-blue-600 mb-8">Contacte</h2>
-      <p class="text-lg font-['Poppins'] text-gray-700 mb-6">Estem aquí per ajudar-te. ¡Posa't en contacte amb nosaltres!</p>
+      <p class="text-lg font-['Poppins'] text-gray-700 mb-6">Estem aquí per ajudar-te. ¡Posa’t en contacte amb nosaltres!</p>
       <div class="max-w-md mx-auto">
         <input type="text" placeholder="Nom" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']">
         <input type="email" placeholder="Correu Electrònic" class="w-full p-3 mb-4 border rounded-lg font-['Poppins']">
@@ -134,6 +148,93 @@
 
     const appointmentDateSelect = document.getElementById('appointment-date');
     const availableTimesDiv = document.getElementById('available-times');
+    const caBtn = document.getElementById('ca-btn');
+    const esBtn = document.getElementById('es-btn');
+
+    // Language switch logic
+    let currentLang = 'ca';
+    const translations = {
+      ca: {
+        inicio: "Inici",
+        nosotros: "Nosaltres",
+        servicios: "Serveis",
+        citas: "Cites Online",
+        contacto: "Contacte",
+        heroTitle: "Ajudem i Sanació a través de la Musicoteràpia",
+        heroText: "Un espai dedicat a les famílies que enfronten l’autisme i l’Alzheimer, oferint empatia, comunitat i esperança.",
+        heroButton: "Demana una Cita",
+        aboutTitle: "Sobre Nosaltres",
+        aboutText1: "A <strong>El Món en Blau i Morat</strong>, creiem en el poder transformador de la música per connectar, sanar i unir les famílies que enfronten els reptes de l’autisme i l’Alzheimer.",
+        aboutText2: "La nostra missió és oferir un espai de suport on l’empatia, la creativitat i la comunitat s’entrelacen per brindar esperança i benestar.",
+        servicesTitle: "Els Nostres Serveis",
+        service1: "Musicoteràpia",
+        service1Desc: "Sessions personalitzades que utilitzen la música per millorar la comunicació, les emocions i el benestar.",
+        service2: "Suport Familiar",
+        service2Desc: "Tallers i recursos per a famílies, fomentant la comprensió i el suport mutu.",
+        service3: "Educació i Sensibilització",
+        service3Desc: "Programes educatius per informar sobre l’autisme i l’Alzheimer.",
+        citasTitle: "Demana una Cita Online",
+        citasText: "Tria una hora lliure i reserva la teva cita de musicoteràpia.",
+        citasDate: "Tria una data",
+        contactoTitle: "Contacte",
+        contactoText: "Estem aquí per ajudar-te. ¡Posa’t en contacte amb nosaltres!"
+      },
+      es: {
+        inicio: "Inicio",
+        nosotros: "Nosotros",
+        servicios: "Servicios",
+        citas: "Citas Online",
+        contacto: "Contacto",
+        heroTitle: "Apoyo y Sanación a través de la Musicoterapia",
+        heroText: "Un espacio dedicado a las familias que enfrentan el autismo y el Alzheimer, ofreciendo empatía, comunidad y esperanza.",
+        heroButton: "Solicita una Cita",
+        aboutTitle: "Sobre Nosotros",
+        aboutText1: "En <strong>El Món en Blau i Morat</strong>, creemos en el poder transformador de la música para conectar, sanar y unir a las familias que enfrentan los retos del autismo y el Alzheimer.",
+        aboutText2: "Nuestra misión es ofrecer un espacio de apoyo donde la empatía, la creatividad y la comunidad se entrelacen para brindar esperanza y bienestar.",
+        servicesTitle: "Nuestros Servicios",
+        service1: "Musicoterapia",
+        service1Desc: "Sesiones personalizadas que utilizan la música para mejorar la comunicación, las emociones y el bienestar.",
+        service2: "Apoyo Familiar",
+        service2Desc: "Talleres y recursos para familias, fomentando la comprensión y el apoyo mutuo.",
+        service3: "Educación y Sensibilización",
+        service3Desc: "Programas educativos para informar sobre el autismo y el Alzheimer.",
+        citasTitle: "Solicita una Cita Online",
+        citasText: "Elige una hora libre y reserva tu cita de musicoterapia.",
+        citasDate: "Selecciona una fecha",
+        contactoTitle: "Contacto",
+        contactoText: "Estamos aquí para ayudarte. ¡Ponte en contacto con nosotros!"
+      }
+    };
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      document.querySelector('#inicio h2').textContent = translations[lang].heroTitle;
+      document.querySelector('#inicio p').textContent = translations[lang].heroText;
+      document.querySelector('#inicio a').textContent = translations[lang].heroButton;
+      document.querySelector('#nosotros h2').textContent = translations[lang].aboutTitle;
+      document.querySelector('#nosotros p:nth-child(2)').innerHTML = translations[lang].aboutText1;
+      document.querySelector('#nosotros p:nth-child(3)').textContent = translations[lang].aboutText2;
+      document.querySelector('#servicios h2').textContent = translations[lang].servicesTitle;
+      document.querySelector('#servicios div:nth-child(2) h3:nth-child(2)').textContent = translations[lang].service1;
+      document.querySelector('#servicios div:nth-child(2) p').textContent = translations[lang].service1Desc;
+      document.querySelector('#servicios div:nth-child(3) h3:nth-child(2)').textContent = translations[lang].service2;
+      document.querySelector('#servicios div:nth-child(3) p').textContent = translations[lang].service2Desc;
+      document.querySelector('#servicios div:nth-child(4) h3:nth-child(2)').textContent = translations[lang].service3;
+      document.querySelector('#servicios div:nth-child(4) p').textContent = translations[lang].service3Desc;
+      document.querySelector('#citas h2').textContent = translations[lang].citasTitle;
+      document.querySelector('#citas p').textContent = translations[lang].citasText;
+      document.querySelector('#citas select').firstChild.textContent = translations[lang].citasDate;
+      document.querySelector('#contacto h2').textContent = translations[lang].contactoTitle;
+      document.querySelector('#contacto p').textContent = translations[lang].contactoText;
+      document.querySelectorAll('nav a')[0].textContent = translations[lang].inicio;
+      document.querySelectorAll('nav a')[1].textContent = translations[lang].nosotros;
+      document.querySelectorAll('nav a')[2].textContent = translations[lang].servicios;
+      document.querySelectorAll('nav a')[3].textContent = translations[lang].citas;
+      document.querySelectorAll('nav a')[4].textContent = translations[lang].contacto;
+    }
+
+    caBtn.addEventListener('click', () => updateLanguage('ca'));
+    esBtn.addEventListener('click', () => updateLanguage('es'));
 
     appointmentDateSelect.addEventListener('change', function() {
       const selectedDate = this.value;
